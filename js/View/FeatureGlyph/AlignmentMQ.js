@@ -12,8 +12,9 @@ function(
         _defaultConfig: function() {
             return this._mergeConfigs(dojo.clone(this.inherited(arguments)), {
                 style: {
-                    color: function(feature, path, glyph, track) {
-                        return 'hsl(20,80%,'+(feature.get('mq'))+'%)';
+                    color: function(feature) {
+                        var mq = feature.get('mq');
+                        return mq ? 'hsl(20,80%,' + mq + '%)' : 'orange';
                     }
                 }
             });

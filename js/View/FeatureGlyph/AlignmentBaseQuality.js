@@ -10,20 +10,10 @@ function(
     BoxGlyph,
     MismatchesMixin
 ) {
-
     return declare([BoxGlyph, MismatchesMixin], {
-
-        constructor: function() {
-
-         // if showMismatches is false, stub out this object's
-         // _drawMismatches to be a no-op
-            if (!this.config.style.showMismatches)
-                this._drawMismatches = function() {};
-
-        },
-
         _defaultConfig: function() {
             return this._mergeConfigs(dojo.clone(this.inherited(arguments)), {
+                style: {
                     strandArrow: false,
                     height: 7,
                     marginBottom: 1,
@@ -43,7 +33,7 @@ function(
             }
         },
 
-         // draw both gaps and mismatches
+        // draw both gaps and mismatches
         _drawMismatches: function(context, fRect, mismatches) {
             var feature = fRect.f;
             var block = fRect.viewInfo.block;
@@ -53,18 +43,37 @@ function(
             context.textBaseline = 'middle'; // reset to alphabetic (the default) after loop
             var seq = feature.get('seq');
             var quals = feature.get('qual').split(' ');
+            var offset = 0;
 
             for (var i = 0; i < seq.length; i++) {
-                var start = feature.get('start') + i;
-                var end = start + 1;
+                var start = feature.get('start') + i + offset;
+                var end = start + 1 + offset;
+                var mRect;
 
-                var mRect = {
+                for (var j = 0; j < mismatches.length; j++) {
+                    if (mismatches[j].start == i && mismatches[j].type == 'skip') {
+                        mRect = {
+                            h: (fRect.rect || {}).h || fRect.h,
+                            l: block.bpToX(start),
+                            t: fRect.rect.t
+                        };
+                        mRect.w = Math.max(block.bpToX(start + mismatches[j].length) - mRect.l, 1);
+                        context.clearRect(mRect.l, mRect.t, mRect.w, mRect.h);
+                        context.fillStyle = '#333';
+                        context.fillRect(mRect.l, mRect.t + (mRect.h - 2) / 2, mRect.w, 2);
+                        offset += mismatches[j].length;
+                    }
+                }
+
+                start = feature.get('start') + i + offset;
+                end = start + 1;
+                mRect = {
                     h: (fRect.rect || {}).h || fRect.h,
                     l: block.bpToX(start),
                     t: fRect.rect.t
                 };
                 mRect.w = Math.max(block.bpToX(end) - mRect.l, 1);
-                context.fillStyle = this.track.colorForBase(seq[i]);
+                context.fillStyle = 'hsl(100,80%,' + parseInt(quals[i]) + '%)';
                 context.fillRect(mRect.l, mRect.t, mRect.w, mRect.h);
                 if (mRect.w >= charSize.w && mRect.h >= charSize.h - 3) {
                     context.font = this.config.style.mismatchFont;
@@ -72,8 +81,6 @@ function(
                     context.fillText(seq[i], mRect.l + (mRect.w - charSize.w) / 2 + 1, mRect.t + mRect.h / 2);
                 }
             }
-
-
             context.textBaseline = 'alphabetic';
         },
 
