@@ -5,7 +5,7 @@ A plugin to plot quality stats on BAM reads
 
 ## Glyphs
 
-- AlignmentBaseQuality - Plot base quality
+- AlignmentBaseQuality - Plot per-base quality scores
 - AlignmentLetters - Plot each letter in different color, so pileup creates stripe pattern
 - AlignmentMQ - Plot mapping quality scores (MQ tag)
 
@@ -31,3 +31,9 @@ A plugin to plot quality stats on BAM reads
 ## Notes
 
 Incompatible with NeatCanvasFeatures which does not allow hsl colors as of writing
+
+## Screenshot
+
+![](img/example.png)
+
+Shows a variety of glyphs. First track is AlignmentsBaseQuality shown in green with per-base scores (all bases had approx equal scores). Second track with red/blue is stock jbrowse. Striped color track is AlignmentLetters. Bottom orange is AlignmentMQ showing mapping quality.

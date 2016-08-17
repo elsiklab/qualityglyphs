@@ -1,16 +1,14 @@
 define([
     'dojo/_base/declare',
     'dojo/_base/array',
-    'JBrowse/View/FeatureGlyph/Box',
-    'JBrowse/Store/SeqFeature/_MismatchesMixin'
+    'JBrowse/View/FeatureGlyph/Alignment'
 ],
 function(
     declare,
     array,
-    BoxGlyph,
-    MismatchesMixin
+    Alignment
 ) {
-    return declare([BoxGlyph, MismatchesMixin], {
+    return declare(Alignment, {
         _defaultConfig: function() {
             return this._mergeConfigs(dojo.clone(this.inherited(arguments)), {
                 style: {
@@ -21,16 +19,6 @@ function(
                     mismatchFont: 'bold 10px Courier New,monospace'
                 }
             });
-        },
-
-        renderFeature: function(context, fRect) {
-            this.inherited(arguments);
-            if (fRect.w > 2) {
-                if (fRect.viewInfo.scale > 0.2)
-                    this._drawMismatches(context, fRect, this._getMismatches(fRect.f));
-                else
-                    this._drawMismatches(context, fRect, this._getSkipsAndDeletions(fRect.f));
-            }
         },
 
         // draw both gaps and mismatches
@@ -52,15 +40,6 @@ function(
 
                 for (var j = 0; j < mismatches.length; j++) {
                     if (mismatches[j].start == i && mismatches[j].type == 'skip') {
-                        mRect = {
-                            h: (fRect.rect || {}).h || fRect.h,
-                            l: block.bpToX(start),
-                            t: fRect.rect.t
-                        };
-                        mRect.w = Math.max(block.bpToX(start + mismatches[j].length) - mRect.l, 1);
-                        context.clearRect(mRect.l, mRect.t, mRect.w, mRect.h);
-                        context.fillStyle = '#333';
-                        context.fillRect(mRect.l, mRect.t + (mRect.h - 2) / 2, mRect.w, 2);
                         offset += mismatches[j].length;
                     }
                 }
@@ -82,20 +61,7 @@ function(
                 }
             }
             context.textBaseline = 'alphabetic';
-        },
-
-        getCharacterMeasurements: function(context) {
-            return this.charSize = this.charSize || function() {
-                var fpx;
-
-                try {
-                    fpx = (this.config.style.mismatchFont.match(/(\d+)px/i) || [])[1];
-                } catch (e) {}
-
-                fpx = fpx || Infinity;
-                return { w: fpx, h: fpx };
-            }.call(this);
+            this.inherited(arguments);
         }
-
     });
 });
