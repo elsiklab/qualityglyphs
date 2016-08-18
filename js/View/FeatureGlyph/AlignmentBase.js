@@ -35,20 +35,21 @@ function(
             var seq = feature.get('seq');
             var quals = feature.get('qual').split(' ');
             var offset = 0;
+            var clip = 0;
             var until = seq.length;
             mismatches.sort(function(a,b) {
                 return a.start - b.start;
             }); 
             if(mismatches[0].type == 'softclip' && mismatches[0].start == 0) {
-                offset += +mismatches[0].base.substring(1);
+                clip += +mismatches[0].base.substring(1);
             }
             if(mismatches[mismatches.length-1].type == 'softclip' && feature.get('start')+mismatches[mismatches.length-1].start == feature.get('end')) {
                 until -= +mismatches[mismatches.length-1].base.substring(1);
             }
 
             for (var i = 0; i < until; i++) {
-                var start = feature.get('start') + i + offset;
-                var end = start + 1 + offset;
+                var start = feature.get('start') + i + clip + offset;
+                var end = start + 1 + clip + offset;
                 var mRect;
 
                 for (var j = 0; j < mismatches.length; j++) {
@@ -65,7 +66,7 @@ function(
                     t: fRect.rect.t
                 };
                 mRect.w = Math.max(block.bpToX(end) - mRect.l, 1);
-                context.fillStyle = this.getConf('style.color', [feature, quals[i], seq[i], this.track]);
+                context.fillStyle = this.getConf('style.color', [feature, quals[i+clip], seq[i+clip], this.track]);
                 context.fillRect(mRect.l, mRect.t, mRect.w, mRect.h);
                 if (mRect.w >= charSize.w && mRect.h >= charSize.h - 3) {
                     context.font = this.config.style.mismatchFont;
