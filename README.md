@@ -37,3 +37,7 @@ Incompatible with NeatCanvasFeatures which does not allow hsl colors as of writi
 ![](img/example.png)
 
 Shows a variety of glyphs. First track is AlignmentsBaseQuality shown in green with per-base scores (all bases had approx equal scores). Second track with red/blue is stock jbrowse. Striped color track is AlignmentLetters. Bottom orange is AlignmentMQ showing mapping quality.
+
+## Configuration
+
+See test/tracks.conf for sample config
