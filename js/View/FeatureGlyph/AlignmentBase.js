@@ -40,11 +40,13 @@ function(
             mismatches.sort(function(a,b) {
                 return a.start - b.start;
             }); 
-            if(mismatches[0].type == 'softclip' && mismatches[0].start == 0) {
-                clip += +mismatches[0].base.substring(1);
-            }
-            if(mismatches[mismatches.length-1].type == 'softclip' && feature.get('start')+mismatches[mismatches.length-1].start == feature.get('end')) {
-                until -= +mismatches[mismatches.length-1].base.substring(1);
+            if(mismatches.length) {
+                if(mismatches[0].type == 'softclip' && mismatches[0].start == 0) {
+                    clip += +mismatches[0].base.substring(1);
+                }
+                if(mismatches[mismatches.length-1].type == 'softclip' && feature.get('start')+mismatches[mismatches.length-1].start == feature.get('end')) {
+                    until -= +mismatches[mismatches.length-1].base.substring(1);
+                }
             }
 
             for (var i = 0; i < until; i++) {
