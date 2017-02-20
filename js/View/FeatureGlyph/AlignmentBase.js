@@ -69,7 +69,7 @@ function(
                 };
                 mRect.w = Math.max(block.bpToX(end) - mRect.l, 1);
                 context.fillStyle = this.getConf('style.color', [feature, quals[i+clip], seq[i+clip], this.track]);
-                context.fillRect(mRect.l, mRect.t, mRect.w, mRect.h);
+                context.fillRect(mRect.l, mRect.t, mRect.w+0.6, mRect.h);
                 if (mRect.w >= charSize.w && mRect.h >= charSize.h - 3) {
                     context.font = this.config.style.mismatchFont;
                     context.fillStyle = 'white';
