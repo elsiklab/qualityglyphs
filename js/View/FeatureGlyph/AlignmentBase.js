@@ -29,6 +29,14 @@ function(
             var feature = fRect.f;
             var block = fRect.viewInfo.block;
             var scale = block.scale;
+            var correctionFactor = 0;
+            if (scale >= 1) {
+                correctionFactor = 0.6;
+            } else if (scale >= 0.2) {
+                correctionFactor = 0.05;
+            } else if (scale >= 0.02) {
+                correctionFactor = 0.03;
+            }
 
             var charSize = this.getCharacterMeasurements(context);
             context.textBaseline = 'middle'; // reset to alphabetic (the default) after loop
@@ -49,27 +57,34 @@ function(
                 }
             }
 
+            var skipMap = {};
+
+            for (var j = 0; j < mismatches.length; j++) {
+                if (mismatches[j].type == 'skip') {
+                    skipMap[mismatches[j].start] = mismatches[j].length;
+                }
+            }
+            console.log(skipMap,clip,seq.length, until,quals.length, feature.get('name'))
+
             for (var i = 0; i < until; i++) {
                 var start = feature.get('start') + i + clip + offset;
                 var end = start + 1 + clip + offset;
                 var mRect;
 
-                for (var j = 0; j < mismatches.length; j++) {
-                    if (mismatches[j].start == i && mismatches[j].type == 'skip') {
-                        offset += mismatches[j].length;
-                    }
+                if(skipMap[i]) {
+                    offset += skipMap[i];
                 }
 
-                start = feature.get('start') + i + offset;
-                end = start + 1;
+
                 mRect = {
                     h: (fRect.rect || {}).h || fRect.h,
                     l: block.bpToX(start),
                     t: fRect.rect.t
                 };
                 mRect.w = Math.max(block.bpToX(end) - mRect.l, 1);
-                context.fillStyle = this.getConf('style.color', [feature, quals[i+clip], seq[i+clip], this.track]);
-                context.fillRect(mRect.l, mRect.t, mRect.w+0.6, mRect.h);
+                var ret = 'hsl(100,80%,' + (quals[i+clip]||0)/3 + '%)';
+                context.fillStyle = ret;//this.getConf('style.color', [feature, quals[i+clip], seq[i+clip], this.track]);
+                context.fillRect(mRect.l, mRect.t, mRect.w + correctionFactor, mRect.h);
                 if (mRect.w >= charSize.w && mRect.h >= charSize.h - 3) {
                     context.font = this.config.style.mismatchFont;
                     context.fillStyle = 'white';

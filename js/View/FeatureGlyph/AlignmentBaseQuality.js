@@ -1,3 +1,4 @@
+var x = 1;
 define([
     'dojo/_base/declare',
     'dojo/_base/array',
@@ -12,8 +13,10 @@ function(
         _defaultConfig: function() {
             return this._mergeConfigs(dojo.clone(this.inherited(arguments)), {
                 style: {
-                    color: function(feature, score) {
-                        return 'hsl(100,80%,' + score + '%)';
+                    baseColor: function(feature, score) {
+                        var ret = 'hsl(100,80%,' + (+score||0)/2.5 + '%)';
+                        if(x++<10) console.log(ret,score);
+                        return ret;
                     }
                 }
             });
