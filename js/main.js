@@ -2,16 +2,15 @@ define([
     'dojo/_base/declare',
     'JBrowse/Plugin'
 ],
-function(
+function (
     declare,
     JBrowsePlugin
 ) {
     return declare(JBrowsePlugin, {
-        constructor: function(args) {
+        constructor: function (args) {
             var browser = args.browser;
 
             console.log('QualityGlyphs plugin starting');
-
         }
     });
 });

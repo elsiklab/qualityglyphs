@@ -3,16 +3,16 @@ define([
     'dojo/_base/array',
     'QualityGlyphs/View/FeatureGlyph/AlignmentBase'
 ],
-function(
+function (
     declare,
     array,
     AlignmentBase
 ) {
     return declare(AlignmentBase, {
-        _defaultConfig: function() {
+        _defaultConfig: function () {
             return this._mergeConfigs(dojo.clone(this.inherited(arguments)), {
                 style: {
-                    color: function(feature, qual, base, track) {
+                    baseColor: function (feature, qual, base, track) {
                         return track.colorForBase(base);
                     }
                 }

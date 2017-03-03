@@ -3,16 +3,16 @@ define([
     'dojo/_base/array',
     'JBrowse/View/FeatureGlyph/Alignment'
 ],
-function(
+function (
     declare,
     array,
     Alignment
 ) {
     return declare(Alignment, {
-        _defaultConfig: function() {
+        _defaultConfig: function () {
             return this._mergeConfigs(dojo.clone(this.inherited(arguments)), {
                 style: {
-                    color: function(feature) {
+                    color: function (feature) {
                         var mq = feature.get('mq');
                         return mq ? 'hsl(20,80%,' + mq + '%)' : 'orange';
                     }
