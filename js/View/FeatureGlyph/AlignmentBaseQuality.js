@@ -13,7 +13,7 @@ function (
             return this._mergeConfigs(dojo.clone(this.inherited(arguments)), {
                 style: {
                     baseColor: function (feature, score) {
-                        return 'hsl(100,80%,' + (score / 2.6) + '%)';
+                        return 'hsl(100,80%,' + ((+score + 45) / 4) + '%)';
                     }
                 }
             });

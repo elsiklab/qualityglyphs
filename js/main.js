@@ -7,9 +7,7 @@ function (
     JBrowsePlugin
 ) {
     return declare(JBrowsePlugin, {
-        constructor: function (args) {
-            var browser = args.browser;
-
+        constructor: function (/* args*/) {
             console.log('QualityGlyphs plugin starting');
         }
     });
